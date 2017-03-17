@@ -1,6 +1,8 @@
+'use strict';
+
 import React from 'react';
 
-class AttendanceEditor extends React.Component {
+class AwesomeComponent extends React.Component {
 
     constructor(props) {
         super(props);
@@ -24,4 +26,4 @@ class AttendanceEditor extends React.Component {
 
 }
 
-export default AttendanceEditor;
+export default AwesomeComponent;
