@@ -20,7 +20,7 @@ class AttendanceEditor extends React.Component {
         const attendance = Object.keys(this.props.eventAttendance).map(
             (key, id) => {
                 var compKey = 'attendance-' + key;
-                return <li key={compKey}>{key}</li>
+                return <li key={compKey}>{key + ' - ' + this.props.eventAttendance[key]}</li>
             }
         );
 
