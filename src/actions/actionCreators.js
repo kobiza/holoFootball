@@ -8,3 +8,18 @@ export const setCurrentUser = (userName) => {
         userName
     };
 };
+
+export const currentEventAttendanceReceived = (attendance) => {
+    return {
+        type: actionTypes.CURRENT_EVENT_ATTENDANCE_RECEIVED,
+        attendance
+    };
+};
+
+export const attendanceChanged = (id, value) => {
+    return {
+        type: actionTypes.ATTENDANCE_CHANGED,
+        id,
+        value
+    };
+};

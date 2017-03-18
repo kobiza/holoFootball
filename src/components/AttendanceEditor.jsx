@@ -1,29 +1,38 @@
 'use strict';
 
 import React from 'react';
+import { connect } from 'react-redux';
+
+
+function mapStateToProps(state) {
+    return {
+        eventAttendance: state.eventAttendance
+    };
+}
 
 class AttendanceEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {likesCount : 0};
-        this.onLike = this.onLike.bind(this);
-    }
-
-    onLike () {
-        let newLikesCount = this.state.likesCount + 1;
-        this.setState({likesCount: newLikesCount});
     }
 
     render() {
+        const attendance = Object.keys(this.props.eventAttendance).map(
+            (key, id) => {
+                var compKey = 'attendance-' + key;
+                return <li key={compKey}>{key}</li>
+            }
+        );
+
         return (
             <div>
-                Likes : <span>{this.state.likesCount}</span>
-                <div><button onClick={this.onLike}>Like Me</button></div>
+                <ul>
+                    {attendance}
+                </ul>
             </div>
         );
     }
 
 }
 
-export default AttendanceEditor;
+export default connect(mapStateToProps)(AttendanceEditor);
