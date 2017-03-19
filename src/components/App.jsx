@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {fetchAppData, registerForAttendanceChange} from '../utils/userActions.js'
+import {fetchAttendance, registerForAttendanceChange} from '../utils/userActions.js'
 
 import AppHeader from './AppHeader.jsx';
 import AttendanceEditor from './AttendanceEditor.jsx';
@@ -10,14 +10,17 @@ import AttendanceEditor from './AttendanceEditor.jsx';
 
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchAppData: () => dispatch(fetchAppData()),
+    fetchAttendance: () => dispatch(fetchAttendance()),
     registerForAttendanceChange: () => dispatch(registerForAttendanceChange())
 });
 
 
 class App extends React.Component {
     componentWillMount() {
-        this.props.fetchAppData();
+        // connect to collection ->
+        // willMount -> fetch.then(register)
+        // willUnMount -> unregister
+        this.props.fetchAttendance();
         this.props.registerForAttendanceChange();
     }
 
