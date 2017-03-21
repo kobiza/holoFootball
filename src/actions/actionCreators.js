@@ -2,23 +2,24 @@
 
 import * as actionTypes from './actionTypes';
 
-export const setCurrentUser = (userName) => {
+export const playersReceived = (players) => {
     return {
-        type: actionTypes.SET_CURRENT_USER,
-        userName
+        type: actionTypes.PLAYERS_RECEIVED,
+        players
     };
 };
 
-export const currentEventAttendanceReceived = (attendance) => {
+export const playerChanged = (id, value) => {
     return {
-        type: actionTypes.CURRENT_EVENT_ATTENDANCE_RECEIVED,
-        attendance
+        type: actionTypes.PLAYER_CHANGED,
+        id,
+        value
     };
 };
 
-export const attendanceChanged = (id, value) => {
+export const playerAdded = (id, value) => {
     return {
-        type: actionTypes.ATTENDANCE_CHANGED,
+        type: actionTypes.PLAYER_ADDED,
         id,
         value
     };
