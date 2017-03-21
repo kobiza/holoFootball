@@ -2,25 +2,28 @@
 
 import * as actionTypes from './actionTypes';
 
-export const playersReceived = (players) => {
+export const fbCollectionReceived = (id, value) => {
     return {
-        type: actionTypes.PLAYERS_RECEIVED,
-        players
-    };
-};
-
-export const playerChanged = (id, value) => {
-    return {
-        type: actionTypes.PLAYER_CHANGED,
+        type: actionTypes.FB_COLLECTION_RECEIVED,
         id,
         value
     };
 };
 
-export const playerAdded = (id, value) => {
+export const fbChildChanged = (id, childId, value) => {
     return {
-        type: actionTypes.PLAYER_ADDED,
+        type: actionTypes.FB_CHILD_CHANGED,
         id,
+        childId,
+        value
+    };
+};
+
+export const fbChildAdded = (id, childId, value) => {
+    return {
+        type: actionTypes.FB_CHILD_ADDED,
+        id,
+        childId,
         value
     };
 };

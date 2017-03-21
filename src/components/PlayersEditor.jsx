@@ -5,11 +5,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {updatePlayer, addPlayer} from '../utils/userActions.js'
 
+import fbConnect from '../hoc/fbConnect.jsx';
 
 
 function mapStateToProps(state) {
     return {
-        players: state.players
+        players: state.fb.players
     };
 }
 
@@ -20,7 +21,7 @@ class PlayersEditor extends React.Component {
 
         this.state = {
             newUserName: ''
-        }
+        };
 
         this.addUser = () => {
             if(_.isEmpty(this.state.newUserName)){
@@ -71,4 +72,5 @@ class PlayersEditor extends React.Component {
 
 }
 
-export default connect(mapStateToProps)(PlayersEditor);
+const wrappedWithFb = fbConnect('/players', 'players')(PlayersEditor);
+export default connect(mapStateToProps)(wrappedWithFb);

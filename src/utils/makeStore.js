@@ -1,22 +1,15 @@
 'use strict';
 
-import {createStore, combineReducers, applyMiddleware} from 'redux';
-import thunk from 'redux-thunk';
+import {createStore, combineReducers} from 'redux';
 
-import currentUserReducer from '../reducers/currentUserReducer.js';
-import playersReducer from '../reducers/playersReducer.js';
+import fbReducer from '../reducers/fbReducer.js';
 
 const makeStore = initialState => {
     const reducers = combineReducers({
-        currentUser: currentUserReducer,
-        players: playersReducer
+        fb: fbReducer
     });
 
-    const middleware = applyMiddleware(
-        thunk
-    );
-
-    return createStore(reducers, initialState, middleware);
+    return createStore(reducers, initialState);
 };
 
 export default makeStore;
