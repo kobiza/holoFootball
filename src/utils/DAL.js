@@ -17,22 +17,40 @@ export const read = path => new Promise((resolve, reject) => {
         .catch(reject);
 });
 
+const getOffFunc = (path, eventType, callback) => {
+    return () => {
+        firebase.database().ref(path).off(eventType, callback);
+    };
+};
+
 export const onChildChanged = (path, callback) => {
-    firebase.database().ref(path).on('child_changed', function(childSnapshot, prevChildKey) {
+    const onChildChangedCallback = (childSnapshot, prevChildKey) => {
         callback(childSnapshot, prevChildKey);
-    });
+    };
+
+    firebase.database().ref(path).on('child_changed', onChildChangedCallback);
+
+    return getOffFunc(path, 'child_changed', onChildChangedCallback);
 };
 
 export const onChildAdded = (path, callback) => {
-    firebase.database().ref(path).on('child_added', function(childSnapshot, prevChildKey) {
+    const onChildAddedCallback = (childSnapshot, prevChildKey) => {
         callback(childSnapshot, prevChildKey);
-    });
+    };
+
+    firebase.database().ref(path).on('child_added', onChildAddedCallback);
+
+    return getOffFunc(path, 'child_added', onChildAddedCallback);
 };
 
 export const onChildRemoved = (path, callback) => {
-    firebase.database().ref(path).on('child_removed', function(childSnapshot, prevChildKey) {
+    const onChildRemovedCallback = (childSnapshot, prevChildKey) => {
         callback(childSnapshot, prevChildKey);
-    });
+    };
+
+    firebase.database().ref(path).on('child_removed', onChildRemovedCallback);
+
+    return getOffFunc(path, 'child_removed', onChildRemovedCallback);
 };
 
 //add offChildChanged

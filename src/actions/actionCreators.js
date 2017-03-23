@@ -10,6 +10,13 @@ export const fbCollectionReceived = (id, value) => {
     };
 };
 
+export const fbClearCollection = (id) => {
+    return {
+        type: actionTypes.FB_CLEAR_COLLECTION,
+        id
+    };
+};
+
 export const fbChildChanged = (id, childId, value) => {
     return {
         type: actionTypes.FB_CHILD_CHANGED,

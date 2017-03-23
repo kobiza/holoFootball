@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import {FB_COLLECTION_RECEIVED, FB_CHILD_CHANGED, FB_CHILD_ADDED, FB_CHILD_REMOVED} from '../actions/actionTypes';
+import {FB_COLLECTION_RECEIVED, FB_CLEAR_COLLECTION, FB_CHILD_CHANGED, FB_CHILD_ADDED, FB_CHILD_REMOVED} from '../actions/actionTypes';
 
 const initialState = {};
 
@@ -11,6 +11,11 @@ export default function fbReducer(state = initialState, action = {}) {
         case FB_COLLECTION_RECEIVED:
             newState = _.clone(state);
             newState[action.id] = action.value;
+
+            return newState;
+        case FB_CLEAR_COLLECTION:
+            newState = _.clone(state);
+            delete newState[action.id];
 
             return newState;
         case FB_CHILD_CHANGED:
