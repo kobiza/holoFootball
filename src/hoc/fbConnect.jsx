@@ -48,7 +48,6 @@ const fbConnect = (path, stateKey) => {
             }
 
             componentWillMount() {
-                console.log("fbConnect.componentWillMount()");
                 const { store } = this.context;
                 validateNewConnection(path, stateKey);
                 var isFirstConnection = addNewConnection(path, stateKey);
