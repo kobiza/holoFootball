@@ -55,8 +55,6 @@ class PlayersEditor extends React.Component {
             );
         });
 
-
-
         return (
             <div>
                 <div className="add-player">

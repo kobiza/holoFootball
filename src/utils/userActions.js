@@ -24,11 +24,6 @@ export const registerToChildRemoved  = (path, action) => (dispatch, getState) =>
         dispatch(action(itemChangedSnapshot.key));
     });
 
-// export const unRegisterToChildChanged  = (path, action) => (dispatch, getState) =>
-//     DAL.onChildChanged(path, (itemChangedSnapshot) => {
-//         dispatch(action(itemChangedSnapshot.key, itemChangedSnapshot.val()));
-//     });
-
 export const updatePlayer = (playerId, value) => {
     DAL.setIn('/players/' + playerId, value);
 };
