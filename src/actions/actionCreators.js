@@ -27,3 +27,11 @@ export const fbChildAdded = (id, childId, value) => {
         value
     };
 };
+
+export const fbChildRemove = (id, childId) => {
+    return {
+        type: actionTypes.FB_CHILD_REMOVED,
+        id,
+        childId
+    };
+};

@@ -29,4 +29,10 @@ export const onChildAdded = (path, callback) => {
     });
 };
 
+export const onChildRemoved = (path, callback) => {
+    firebase.database().ref(path).on('child_removed', function(childSnapshot, prevChildKey) {
+        callback(childSnapshot, prevChildKey);
+    });
+};
+
 //add offChildChanged

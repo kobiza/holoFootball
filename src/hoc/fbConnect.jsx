@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import React from 'react';
-import {fetchData, registerToChildChanged, registerToChildAdded} from '../utils/userActions.js';
-import {fbCollectionReceived, fbChildChanged, fbChildAdded} from '../actions/actionCreators'
+import {fetchData, registerToChildChanged, registerToChildAdded, registerToChildRemoved} from '../utils/userActions.js';
+import {fbCollectionReceived, fbChildChanged, fbChildAdded, fbChildRemove} from '../actions/actionCreators'
 
 
 const fbConnect = (path, stateKey) => {
@@ -16,13 +16,14 @@ const fbConnect = (path, stateKey) => {
             componentWillMount() {
                 const { store } = this.context;
 
-                fetchData(path, _.partial(fbCollectionReceived, stateKey))(store.dispatch).then(() => {
-                    registerToChildChanged(path, _.partial(fbChildChanged, stateKey))(store.dispatch);
-                    registerToChildAdded(path, _.partial(fbChildAdded, stateKey))(store.dispatch);
-                });
+                registerToChildChanged(path, _.partial(fbChildChanged, stateKey))(store.dispatch);
+                registerToChildAdded(path, _.partial(fbChildAdded, stateKey))(store.dispatch);
+                registerToChildRemoved(path, _.partial(fbChildRemove, stateKey))(store.dispatch);
+                fetchData(path, _.partial(fbCollectionReceived, stateKey))(store.dispatch);
 
             }
 
+            //unregister on umnount
             // componentWillUnmount() {
             // }
 

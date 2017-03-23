@@ -16,9 +16,12 @@ export const registerToChildChanged  = (path, action) => (dispatch, getState) =>
 
 export const registerToChildAdded  = (path, action) => (dispatch, getState) =>
     DAL.onChildAdded(path, (itemChangedSnapshot) => {
-        console.log('child added');
-
         dispatch(action(itemChangedSnapshot.key, itemChangedSnapshot.val()));
+    });
+
+export const registerToChildRemoved  = (path, action) => (dispatch, getState) =>
+    DAL.onChildRemoved(path, (itemChangedSnapshot) => {
+        dispatch(action(itemChangedSnapshot.key));
     });
 
 // export const unRegisterToChildChanged  = (path, action) => (dispatch, getState) =>
