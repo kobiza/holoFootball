@@ -14,7 +14,7 @@ function mapStateToProps(state) {
     };
 }
 
-class PlayersEditor extends React.Component {
+class Players extends React.Component {
 
     constructor(props) {
         super(props);
@@ -47,10 +47,9 @@ class PlayersEditor extends React.Component {
         const players = _.map(this.props.players, (currentPlayer, playerId) => {
             return (
                 <div className="player-row" key={'player-' + playerId}>
-                    <label className="player-name">{currentPlayer.name}</label>
+                    <div className="player-name" style={{display: 'inline-block', width: "100px"}}>{currentPlayer.name}</div>
                     <input type="checkbox" checked={currentPlayer.isPermanent} onChange={() => this.togglePermanent(playerId, currentPlayer)}/>
                     <label>Permanent</label>
-                    <label>{' Credit: ' + currentPlayer.pointsCredit}</label>
                 </div>
             );
         });
@@ -70,5 +69,5 @@ class PlayersEditor extends React.Component {
 
 }
 
-const wrappedWithFb = fbConnect('/players', 'players')(PlayersEditor);
+const wrappedWithFb = fbConnect('/players', 'players')(Players);
 export default connect(mapStateToProps)(wrappedWithFb);

@@ -1,17 +1,43 @@
 'use strict';
 
 import React from 'react';
+import {Provider} from 'react-redux';
+import makeStore from '../utils/makeStore.js';
+
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+
 
 import AppHeader from './AppHeader.jsx';
-import PlayersEditor from './PlayersEditor.jsx';
+import Players from './Players.jsx';
+import Payments from './Payments.jsx';
+import Home from './Home.jsx';
+
+const store = makeStore();
 
 class App extends React.Component {
     render() {
         return (
-            <div className="index">
-                <AppHeader title="Holon football"/>
-                <PlayersEditor/>
-            </div>
+            <Provider store={store}>
+                <div className="App">
+                    <AppHeader title="Holon football"/>
+
+                    <Router>
+                        <div>
+                            <ul>
+                                <li><Link to="/">Home</Link></li>
+                                <li><Link to="/players">Players</Link></li>
+                                <li><Link to="/payments">Payments</Link></li>
+                            </ul>
+
+                            <hr/>
+
+                            <Route exact path="/" component={Home}/>
+                            <Route path="/players" component={Players}/>
+                            <Route path="/payments" component={Payments}/>
+                        </div>
+                    </Router>
+                </div>
+            </Provider>
         );
     }
 }
