@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import React from 'react';
-import {fetchData, registerToChildChanged, registerToChildAdded, registerToChildRemoved} from '../utils/userActions.js';
+import {fetchData, registerToChildChanged, registerToChildAdded, registerToChildRemoved} from '../utils/generalDBUtils.js';
 import {fbCollectionReceived, fbChildChanged, fbChildAdded, fbChildRemove, fbClearCollection} from '../actions/actionCreators'
 
 

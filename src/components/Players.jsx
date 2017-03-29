@@ -5,7 +5,7 @@ require('./Players.scss');
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import {updatePlayer, addPlayer} from '../utils/userActions.js'
+import {updatePlayer, addPlayer} from '../utils/playersDBUtils.js'
 
 import fbConnect from '../hoc/fbConnect.jsx';
 
