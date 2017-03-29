@@ -1,5 +1,7 @@
 'use strict';
 
+require('./Players.scss');
+
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -47,7 +49,7 @@ class Players extends React.Component {
         const players = _.map(this.props.players, (currentPlayer, playerId) => {
             return (
                 <div className="player-row" key={'player-' + playerId}>
-                    <div className="player-name" style={{display: 'inline-block', width: "100px"}}>{currentPlayer.name}</div>
+                    <div className="player-name">{currentPlayer.name}</div>
                     <input type="checkbox" checked={currentPlayer.isPermanent} onChange={() => this.togglePermanent(playerId, currentPlayer)}/>
                     <label>Permanent</label>
                 </div>
@@ -55,7 +57,7 @@ class Players extends React.Component {
         });
 
         return (
-            <div>
+            <div className="players-container">
                 <div className="add-player">
                     <input type="text" placeholder="new player" onChange={this.setNewUserName} value={this.state.newUserName}/>
                     <input type="button" value="add" onClick={this.addUser}/>

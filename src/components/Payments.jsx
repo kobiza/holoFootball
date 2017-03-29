@@ -1,5 +1,7 @@
 'use strict';
 
+require('./Payments.scss');
+
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -24,14 +26,14 @@ class Payments extends React.Component {
         const players = _.map(this.props.players, (currentPlayer, playerId) => {
             return (
                 <div className="player-row" key={'player-' + playerId}>
-                    <div className="player-name" style={{display: 'inline-block', width: "100px"}}>{currentPlayer.name}</div>
+                    <div className="player-name">{currentPlayer.name}</div>
                     <label>{' Credit: ' + currentPlayer.pointsCredit}</label>
                 </div>
             );
         });
 
         return (
-            <div>
+            <div className="payments-container">
                 <div className="players-list">
                     {players}
                 </div>
