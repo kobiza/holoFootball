@@ -11,8 +11,12 @@ const getNewPlayerID = () => {
     return 'player-' + s4();
 };
 
-const getNewPaymentTransactionID= () => {
+const getNewPaymentID= () => {
     return 'pay-' + s4();
+};
+
+const getNewTransactionID= () => {
+    return 'tran-' + s4();
 };
 
 export const addPlayer = (playerName) => {
@@ -41,7 +45,9 @@ const calcPoints = (price) => {
 };
 
 export const createPaymentTransaction = (playerId, payment) => {
-    const newPaymentPath = '/payments/' + getNewPaymentTransactionID();
+    const newPaymentID = getNewPaymentID();
+    const newPaymentPath = '/payments/' + newPaymentID;
+    const newTransactionPath = '/transactions/' + getNewTransactionID();
     const playerPath = '/players/' + playerId;
     const creditPointsPath = playerPath + '/creditPoints';
 
@@ -49,20 +55,18 @@ export const createPaymentTransaction = (playerId, payment) => {
         .then((player) => {
             console.log("player= ", player);
             const pointsToAdd = calcPoints(payment);
-            let playerCreditPoints = player.creditPoints + pointsToAdd;
+            const playerCreditPoints = player.creditPoints + pointsToAdd;
             return Promise.all([
-                DAL.setIn(newPaymentPath, {playerId, payment, pointsAdded: pointsToAdd, date: Date.now()}),
+                DAL.setIn(newPaymentPath, {playerId, payment, date: Date.now()}),
+                DAL.setIn(newTransactionPath, {playerId, creditPoints: pointsToAdd, type: 'PAYMENT', relatedEntity: newPaymentID}),
                 DAL.setIn(creditPointsPath, playerCreditPoints)
         ])});
 };
-//
-// export const addCreditPointsToPlayer = (playerId, value) => {
-//     const creditPointsPath = '/players/' + playerId + '/creditPoints';
-//
-//     DAL.read(creditPointsPath)
-//         .then((data) => Promise.all([
-//             dispatch(action(data))
-//         ]));
-//
-//     DAL.setIn(creditPointsPath, value);
-// };
+
+// *
+// transactions should be added for payment or event_done actions. to have full story about credit points
+// player: id, date: date, creditPoints: +30, type: 'payment', relatedEntity: pay-1z29
+// player: id, date: date, creditPoints: -30, type: 'event', relatedEntity: event-d2e3
+// */
+
+
