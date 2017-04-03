@@ -71,5 +71,5 @@ class Players extends React.Component {
 
 }
 
-const wrappedWithFb = fbConnect('/players', 'players')(Players);
+const wrappedWithFb = fbConnect({'players': '/players'})(Players);
 export default connect(mapStateToProps)(wrappedWithFb);

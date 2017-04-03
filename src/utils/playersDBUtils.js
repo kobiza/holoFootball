@@ -44,12 +44,28 @@ const calcPoints = (price) => {
     return price;
 };
 
+const updatePlayerCreditPoints = (playerId, playerCreditPoints) => {
+    const playerPath = '/players/' + playerId;
+    const creditPointsPath = playerPath + '/creditPoints';
+
+    return DAL.setIn(creditPointsPath, playerCreditPoints)
+};
+
+export const addCreditPointsToPlayer = (playerId, pointsToAdd) => {
+    const playerPath = '/players/' + playerId;
+
+    return DAL.read(playerPath).then((player) => {
+        const playerCreditPoints = player.creditPoints + pointsToAdd;
+
+        return updatePlayerCreditPoints(playerId, playerCreditPoints);
+    });
+};
+
 export const createPaymentTransaction = (playerId, payment) => {
     const newPaymentID = getNewPaymentID();
     const newPaymentPath = '/payments/' + newPaymentID;
     const newTransactionPath = '/transactions/' + getNewTransactionID();
     const playerPath = '/players/' + playerId;
-    const creditPointsPath = playerPath + '/creditPoints';
 
     return DAL.read(playerPath)
         .then((player) => {
@@ -59,7 +75,7 @@ export const createPaymentTransaction = (playerId, payment) => {
             return Promise.all([
                 DAL.setIn(newPaymentPath, {playerId, payment, date: Date.now()}),
                 DAL.setIn(newTransactionPath, {playerId, creditPoints: pointsToAdd, type: 'PAYMENT', relatedEntity: newPaymentID}),
-                DAL.setIn(creditPointsPath, playerCreditPoints)
+                updatePlayerCreditPoints(playerId, playerCreditPoints)
         ])});
 };
 

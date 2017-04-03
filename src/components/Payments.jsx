@@ -84,5 +84,5 @@ class Payments extends React.Component {
 
 }
 
-const wrappedWithFb = fbConnect('/players', 'players')(Payments);
+const wrappedWithFb = fbConnect({'players': '/players'})(Payments);
 export default connect(mapStateToProps)(wrappedWithFb);

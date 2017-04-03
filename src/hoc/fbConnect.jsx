@@ -40,39 +40,55 @@ const removeConnection = (path, stateKey) => {
     return false;
 };
 
-const fbConnect = (path, stateKey) => {
+const fbConnect = (mapStateToFirebase) => {
     const connector = (Component) => {
         class ContainerComponent extends React.Component {
             constructor(props) {
                 super(props);
+
+                this.updateMapStateToFirebase = () => {
+                    this.mapStateToFirebase = _.isFunction(mapStateToFirebase) ?
+                        mapStateToFirebase(this.props) :
+                        mapStateToFirebase;
+                }
             }
 
             componentWillMount() {
                 const { store } = this.context;
-                validateNewConnection(path, stateKey);
-                var isFirstConnection = addNewConnection(path, stateKey);
+                this.updateMapStateToFirebase();
 
-                if (isFirstConnection){
-                    const unsubscribeChildChanged = registerToChildChanged(path, _.partial(fbChildChanged, stateKey))(store.dispatch);
-                    const unsubscribeChildAdded = registerToChildAdded(path, _.partial(fbChildAdded, stateKey))(store.dispatch);
-                    const unsubscribeChildRemoved = registerToChildRemoved(path, _.partial(fbChildRemove, stateKey))(store.dispatch);
-                    fetchData(path, _.partial(fbCollectionReceived, stateKey))(store.dispatch);
+                const connectFirebaseToState = (path, stateKey) => {
+                    validateNewConnection(path, stateKey);
+                    var isFirstConnection = addNewConnection(path, stateKey);
 
-                    disconnect[stateKey] = () => {
-                        unsubscribeChildChanged();
-                        unsubscribeChildAdded();
-                        unsubscribeChildRemoved();
-                        store.dispatch(fbClearCollection(stateKey));
-                    };
-                }
+                    if (isFirstConnection){
+                        const unsubscribeChildChanged = registerToChildChanged(path, _.partial(fbChildChanged, stateKey))(store.dispatch);
+                        const unsubscribeChildAdded = registerToChildAdded(path, _.partial(fbChildAdded, stateKey))(store.dispatch);
+                        const unsubscribeChildRemoved = registerToChildRemoved(path, _.partial(fbChildRemove, stateKey))(store.dispatch);
+                        fetchData(path, _.partial(fbCollectionReceived, stateKey))(store.dispatch);
+
+                        disconnect[stateKey] = () => {
+                            unsubscribeChildChanged();
+                            unsubscribeChildAdded();
+                            unsubscribeChildRemoved();
+                            store.dispatch(fbClearCollection(stateKey));
+                        };
+                    }
+                };
+
+                _.forEach(this.mapStateToFirebase, connectFirebaseToState);
             }
 
             componentWillUnmount() {
-                const isLastConnection = removeConnection(path, stateKey);
+                const disconnectFirebaseToState = (path, stateKey) => {
+                    const isLastConnection = removeConnection(path, stateKey);
 
-                if (isLastConnection){
-                    disconnect[stateKey]();
-                }
+                    if (isLastConnection){
+                        disconnect[stateKey]();
+                    }
+                };
+
+                _.forEach(this.mapStateToFirebase, disconnectFirebaseToState);
             }
 
             render() {
