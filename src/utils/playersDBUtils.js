@@ -19,13 +19,13 @@ const getNewTransactionID= () => {
     return 'tran-' + s4();
 };
 
-export const addPlayer = (playerName) => {
+export const addPlayer = (playerData) => {
     var playerId = getNewPlayerID();
     var defaults = {
         isPermanent: true,
         creditPoints: 0
     };
-    var newPlayer = _.defaults({name: playerName}, defaults);
+    var newPlayer = _.defaults(playerData, defaults);
 
     return DAL.setIn('/players/' + playerId, newPlayer);
 };

@@ -4,6 +4,8 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import {addPlayerToEvent, removePlayerFromEvent, closeEvent} from '../utils/eventsDBUtils.js'
+import RaisedButton from 'material-ui/RaisedButton';
+
 
 import fbConnect from '../hoc/fbConnect.jsx';
 
@@ -71,7 +73,7 @@ class Event extends React.Component {
                 {approvedRows}
                 <div className="separator"></div>
                 {didNotApprovedRows}
-                <input type="button" value="close" onClick={this.closeEvent}/>
+                <RaisedButton label="Close" onClick={this.closeEvent}/>
             </div>
         );
     }
