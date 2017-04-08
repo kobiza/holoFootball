@@ -1,18 +1,10 @@
 .players-container {
-  .player-row {
-    .player-name {
-      display: inline-block;
-      width: 150px;
-    }
-  }
-
   .add-button {
+    z-index: 99;
     position: fixed;
     bottom: 20px;
     right: calc(50% - 270px);
   }
-
-
 }
 
 @media all and (max-width: 600px) {

@@ -61,7 +61,7 @@ export const addCreditPointsToPlayer = (playerId, pointsToAdd) => {
     });
 };
 
-export const createPaymentTransaction = (playerId, payment) => {
+export const createPaymentTransaction = (playerId, amount) => {
     const newPaymentID = getNewPaymentID();
     const newPaymentPath = '/payments/' + newPaymentID;
     const newTransactionPath = '/transactions/' + getNewTransactionID();
@@ -69,11 +69,10 @@ export const createPaymentTransaction = (playerId, payment) => {
 
     return DAL.read(playerPath)
         .then((player) => {
-            console.log("player= ", player);
-            const pointsToAdd = calcPoints(payment);
+            const pointsToAdd = calcPoints(amount);
             const playerCreditPoints = player.creditPoints + pointsToAdd;
             return Promise.all([
-                DAL.setIn(newPaymentPath, {playerId, payment, date: Date.now()}),
+                DAL.setIn(newPaymentPath, {playerId, amount, date: Date.now()}),
                 DAL.setIn(newTransactionPath, {playerId, creditPoints: pointsToAdd, type: 'PAYMENT', relatedEntity: newPaymentID}),
                 updatePlayerCreditPoints(playerId, playerCreditPoints)
         ])});

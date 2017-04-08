@@ -11,23 +11,16 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 
-import Bookmark from 'material-ui/svg-icons/action/bookmark';
-import BookmarkBorder from 'material-ui/svg-icons/action/bookmark-border';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
-
-
-
-
 
 import fbConnect from '../hoc/fbConnect.jsx';
 
@@ -177,7 +170,7 @@ class Players extends React.Component {
                                value={this.state.newPlayerData && this.state.newPlayerData.name}
                                onChange={this.setNewUserName}/>
                     <Checkbox label="Permanent"
-                              value={this.state.newPlayerData &&  this.state.newPlayerData.isPermanent}
+                              checked={this.state.newPlayerData &&  this.state.newPlayerData.isPermanent}
                               onCheck={this.setNewUserIsPermanent}/>
                 </Dialog>
             </div>
