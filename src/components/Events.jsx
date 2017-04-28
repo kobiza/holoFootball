@@ -10,6 +10,14 @@ import {createEvent} from '../utils/eventsDBUtils.js'
 
 import fbConnect from '../hoc/fbConnect.jsx';
 
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Dialog from 'material-ui/Dialog';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import FlatButton from 'material-ui/FlatButton';
+import DatePicker from 'material-ui/DatePicker';
+
 
 function mapStateToProps(state) {
     return {
@@ -25,13 +33,12 @@ class Events extends React.Component {
         super(props);
 
         this.state = {
-            newEventDate: ''
+            isAddPopupOpen: false,
+            newEventData: {}
         };
 
-        this.updateNewEventDate = (e) => {
-            // new Date(e.target.value)
-
-            this.setState({newEventDate: e.target.value});
+        this.updateNewEventDate = (e, date) => {
+            this.setState({newEventData: { date }});
         };
 
         this.createEvent = () => {
@@ -45,27 +52,68 @@ class Events extends React.Component {
             this.setState({newEventDate: ''});
 
         };
+
+        this.openAddPopup = () => {
+            this.setState({isAddPopupOpen: true, newEventData: {date: new Date()}});
+        };
+
+        this.closeAddPopup = () => {
+            this.setState({isAddPopupOpen: false, newEventData: {}});
+        };
+
+        this.addEvent = () => {
+            const eventDate = new Date(this.state.newEventData.date);
+            createEvent(eventDate);
+
+            this.closeAddPopup();
+        };
     }
 
     render() {
+
         const events = _.map(this.props.events, (currentEvent, eventId) => {
             return (
-                <div className="event-row" key={'event-' + eventId}>
-                    <div className="event-date">{dateToString(currentEvent.date)}</div>
-                    <Link to={"/event/" + eventId}>go to event</Link>
-                </div>
+                <ListItem
+                    key={eventId}
+                    primaryText={dateToString(currentEvent.date)}
+                    containerElement={<Link to={"/event/" + eventId}/>}
+                />
             );
         });
 
+        const actions = [
+            <FlatButton
+                label="Add"
+                primary={true}
+                onTouchTap={this.addEvent}
+            />
+        ];
+
         return (
             <div className="events-container">
-                <div className="add-event">
-                    <input type="date" value={this.state.newEventDate} onChange={this.updateNewEventDate}/>
-                    <input type="button" value="add" onClick={this.createEvent}/>
-                </div>
-                <div className="events-list">
+                <List>
+                    <Subheader>Permanents</Subheader>
                     {events}
-                </div>
+                </List>
+
+                <FloatingActionButton className="add-button" onTouchTap={this.openAddPopup} >
+                    <ContentAdd />
+                </FloatingActionButton>
+
+                <Dialog
+                    title="Add Event"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.isAddPopupOpen}
+                    contentStyle={{width: '300px'}}
+                    onRequestClose={this.closeAddPopup}>
+                    <DatePicker
+                        hintText="Event date"
+                        value={this.state.newEventData.date}
+                        onChange={this.updateNewEventDate}
+                    />
+
+                </Dialog>
             </div>
         );
     }
