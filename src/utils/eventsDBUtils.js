@@ -39,6 +39,17 @@ export const addPlayerToEvent = (eventId, playerId) => {
     });
 };
 
+export const addPlayersToEvent = (eventId, playersToAdd) => {
+    const eventPath = '/events/' + eventId;
+
+    return DAL.read(eventPath).then((event) => {
+        let players = event.players || [];
+        players = players.concat(playersToAdd);
+        const playersPath = eventPath + '/players';
+        return DAL.setIn(playersPath, players)
+    });
+};
+
 export const removePlayerFromEvent = (eventId, playerId) => {
     const eventPath = '/events/' + eventId;
 
@@ -59,15 +70,18 @@ export const closeEvent = (eventId) => {
     const eventPath = '/events/' + eventId;
     const eventStatusPath = eventPath + '/status';
 
-    const newTransactionPath = '/transactions/' + getNewTransactionID();
+
 
     return DAL.read(eventPath).then((event) => {
         if (event.status === 'CLOSED'){
             return Promise.resolve();
         }
 
-        const transactionsUpdates = _.map(event.players, (playerId) =>
-            DAL.setIn(newTransactionPath, {playerId, creditPoints: -30, type: 'EVENT', relatedEntity: eventId}));
+        const transactionsUpdates = _.map(event.players, (playerId) => {
+            const newTransactionPath = '/transactions/' + getNewTransactionID();
+            return DAL.setIn(newTransactionPath, {playerId, creditPoints: -30, type: 'EVENT', relatedEntity: eventId});
+        });
+
         const playersUpdates = _.map(event.players, (playerId) => addCreditPointsToPlayer(playerId, -30));
 
 

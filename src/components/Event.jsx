@@ -1,14 +1,29 @@
 'use strict';
 
+require('./Event.scss');
+
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import {addPlayerToEvent, removePlayerFromEvent, closeEvent} from '../utils/eventsDBUtils.js'
-import RaisedButton from 'material-ui/RaisedButton';
-
+import {addPlayersToEvent, removePlayerFromEvent, closeEvent} from '../utils/eventsDBUtils.js'
+import Select from 'react-select';
 
 import fbConnect from '../hoc/fbConnect.jsx';
 
+import {List, ListItem} from 'material-ui/List';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+
+import Subheader from 'material-ui/Subheader';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import Divider from 'material-ui/Divider';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import PanTool from 'material-ui/svg-icons/action/pan-tool';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import PermIdentity from 'material-ui/svg-icons/action/perm-identity';
+import ThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,28 +32,55 @@ const mapStateToProps = (state) => {
     };
 };
 
+const dateToString = (date) => (new Date(date)).toLocaleDateString();
+
+
 class Event extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.approve = (playerId) => {
-            const eventId = this.props.match.params.id;
-
-            addPlayerToEvent(eventId, playerId);
+        this.state = {
+            selectedTab: 1,
+            isAddPopupOpen: false,
+            playersToAdd: []
         };
 
-        this.abortApprove = (playerId) => {
-            const eventId = this.props.match.params.id;
+        this.addPlayersToEvent = (playerId) => {
+            if(_.isEmpty(this.state.playersToAdd)){
+                return;
+            }
 
-            removePlayerFromEvent(eventId, playerId);
+            const eventId = this.props.match.params.id;
+            const playersIds = _.map(this.state.playersToAdd, 'value');
+            addPlayersToEvent(eventId, playersIds);
+
+            this.closeAddPopup();
         };
+
+        // this.abortApprove = (playerId) => {
+        //     const eventId = this.props.match.params.id;
+        //
+        //     removePlayerFromEvent(eventId, playerId);
+        // };
 
         this.closeEvent = () => {
             const eventId = this.props.match.params.id;
 
             closeEvent(eventId);
-        }
+        };
+
+        this.openAddPopup = () => {
+            this.setState({isAddPopupOpen: true, playersToAdd: []});
+        };
+
+        this.closeAddPopup = () => {
+            this.setState({isAddPopupOpen: false, playersToAdd: []});
+        };
+
+        this.updatePlayersToAdd = (playersToAdd) => {
+            this.setState({ playersToAdd });
+        };
     }
 
     render() {
@@ -49,31 +91,98 @@ class Event extends React.Component {
         const approved = _.pick(this.props.players, this.props.editingEvent.players);
         const didNotApproved = _.omit(this.props.players, this.props.editingEvent.players);
 
-        const approvedRows = _.map(approved, (player, playerId) => {
+        const permanentApproved = _.pickBy(approved, (player) => player.isPermanent);
+        const guestsApproved = _.omitBy(approved, (player) => player.isPermanent);
+
+        const permanentApprovedRows = _.map(permanentApproved, (player, playerId) => {
             return (
-                <div className="player-row approved" key={'approved-player-' + playerId}>
-                    <div className="player-name">{player.name}</div>
-                    <input type="button" value="X" onClick={() => this.abortApprove(playerId)}/>
-                </div>
+                <ListItem key={playerId} primaryText={player.name}/>
             );
         });
 
-        const didNotApprovedRows = _.map(didNotApproved, (player, playerId) => {
+        const guestsApprovedRows = _.map(guestsApproved, (player, playerId) => {
             return (
-                <div className="player-row did-not-approved" key={'not-approved-player-' + playerId}>
-                    <div className="player-name">{player.name}</div>
-                    <input type="button" value="V" onClick={() => this.approve(playerId)}/>
-                </div>
+                <ListItem key={playerId} primaryText={player.name}/>
             );
         });
+
+        const actions = [
+            <FlatButton
+                label="Add"
+                primary={true}
+                onTouchTap={this.addPlayersToEvent}
+            />
+        ];
+
+        const playersToAddDataSource = _.map(didNotApproved, (player, playerId) => ({label: player.name, value: playerId}));
+
+        const playerManageContainer = (
+            <div>
+                <List>
+                    <Subheader>Permanents</Subheader>
+                    {permanentApprovedRows}
+                </List>
+                <Divider />
+                <List>
+                    <Subheader>Guests</Subheader>
+                    {guestsApprovedRows}
+                </List>
+                <FloatingActionButton mini={true} className="add-button" onTouchTap={this.openAddPopup} >
+                    <ContentAdd />
+                </FloatingActionButton>
+            </div>
+        );
+
+        const numberOfPlayers = _.keys(approved).length;
+        let status = 'good';
+        if (numberOfPlayers < 10) {
+            status = 'bad';
+        } else if (numberOfPlayers < 13) {
+            status = 'nice';
+        }
+
+        const statusContainer = (
+            <div>
+                <div className={"big-number " + status}>{numberOfPlayers}</div>
+                <div className="button-container"><RaisedButton primary={true} onTouchTap={this.closeEvent} style={{display: 'block'}} label="Close event"/></div>
+                <div className="button-container"><RaisedButton style={{display: 'block'}} label="Cancel event"/></div>
+            </div>
+        );
 
         return (
             <div className="event-container">
-                <h1>{this.props.match.params.id + ' - ' + new Date(this.props.editingEvent.date)}</h1>
-                {approvedRows}
-                <div className="separator"></div>
-                {didNotApprovedRows}
-                <RaisedButton label="Close" onClick={this.closeEvent}/>
+                <h2 className="title">{dateToString(this.props.editingEvent.date)}</h2>
+                {this.state.selectedTab === 0 ? playerManageContainer : statusContainer}
+                <Dialog
+                    className="add-to-event-dialog"
+                    title="Add payment"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.isAddPopupOpen}
+                    contentStyle={{width: '300px'}}
+                    onRequestClose={this.closeAddPopup}>
+                    <Select
+                        className="dialog-input"
+                        multi
+                        clearable={false}
+                        value={this.state.playersToAdd}
+                        placeholder="Select player(s)"
+                        options={playersToAddDataSource}
+                        onChange={this.updatePlayersToAdd} />
+                </Dialog>
+
+                <BottomNavigation selectedIndex={this.state.selectedTab} style={{position: 'absolute', bottom: '0'}}>
+                    <BottomNavigationItem
+                        label="Players"
+                        icon={<PermIdentity/>}
+                        onTouchTap={() => this.setState({selectedTab: 0})}
+                    />
+                    <BottomNavigationItem
+                        label="Status"
+                        icon={<ThumbsUpDown/>}
+                        onTouchTap={() => this.setState({selectedTab: 1})}
+                    />
+                </BottomNavigation>
             </div>
         );
     }

@@ -1,0 +1,90 @@
+.event-container {
+  position: relative;
+  min-height: calc(100vh - 64px);
+
+  .title {
+    margin: 0;
+    padding-top: 10px;
+    text-align: center;
+  }
+
+  .big-number {
+    font-family: Roboto, sans-serif;
+    font-size: 14em;
+    text-align: center;
+
+    &.bad {
+      color: red;
+    }
+
+    &.nice {
+      color: orange;
+    }
+
+    &.good {
+      color: greenyellow;
+    }
+  }
+
+  .button-container {
+    margin-top: 20px;
+    > div {
+      width: 150px;
+      position: relative;
+      margin: 0 auto;
+    }
+  }
+
+  .add-button {
+    z-index: 99;
+    position: fixed;
+    bottom: 90px;
+    right: calc(50% - 270px);
+  }
+
+  .done-button {
+    z-index: 99;
+    position: fixed;
+    top: 70px;
+    right: calc(50% - 270px);
+  }
+}
+
+.add-to-event-dialog {
+
+  .dialog-input {
+    margin-bottom: 80px;
+  }
+
+  .Select {
+    .Select-control {
+      border-radius: 0;
+      border: 0;
+      border-bottom: 1px solid rgb(224, 224, 224);
+
+      .Select-placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .Select-menu-outer {
+      max-height: 100px;
+    }
+
+    .Select-menu {
+      max-height: 98px;
+    }
+  }
+}
+
+@media all and (max-width: 600px) {
+  .event-container {
+    .add-button {
+      right: 30px;
+    }
+
+    .done-button {
+      right: 30px;
+    }
+  }
+}

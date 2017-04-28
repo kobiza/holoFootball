@@ -92,7 +92,7 @@ class Events extends React.Component {
         return (
             <div className="events-container">
                 <List>
-                    <Subheader>Permanents</Subheader>
+                    <Subheader>Events</Subheader>
                     {events}
                 </List>
 
