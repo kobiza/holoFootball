@@ -11,17 +11,16 @@ import Select from 'react-select';
 import fbConnect from '../hoc/fbConnect.jsx';
 
 import {List, ListItem} from 'material-ui/List';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 import Subheader from 'material-ui/Subheader';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import PanTool from 'material-ui/svg-icons/action/pan-tool';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import PermIdentity from 'material-ui/svg-icons/action/perm-identity';
 import ThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
 
@@ -41,7 +40,7 @@ class Event extends React.Component {
         super(props);
 
         this.state = {
-            selectedTab: 1,
+            selectedTab: 'status',
             isAddPopupOpen: false,
             playersToAdd: []
         };
@@ -81,6 +80,10 @@ class Event extends React.Component {
         this.updatePlayersToAdd = (playersToAdd) => {
             this.setState({ playersToAdd });
         };
+
+        this.handleChange = (selectedTab) => {
+            this.setState({ selectedTab });
+        }
     }
 
     render() {
@@ -145,14 +148,30 @@ class Event extends React.Component {
             <div>
                 <div className={"big-number " + status}>{numberOfPlayers}</div>
                 <div className="button-container"><RaisedButton primary={true} onTouchTap={this.closeEvent} style={{display: 'block'}} label="Close event"/></div>
-                <div className="button-container"><RaisedButton style={{display: 'block'}} label="Cancel event"/></div>
+                <div className="button-container cancel-button-container"><RaisedButton style={{display: 'block'}} label="Cancel event"/></div>
             </div>
         );
 
         return (
             <div className="event-container">
                 <h2 className="title">{dateToString(this.props.editingEvent.date)}</h2>
-                {this.state.selectedTab === 0 ? playerManageContainer : statusContainer}
+
+                <Tabs
+                    value={this.state.selectedTab}
+                    onChange={this.handleChange}
+                >
+                    <Tab
+                        value="status"
+                        icon={<ThumbsUpDown/>}
+                        label="STATUS"
+                    />
+                    <Tab
+                        value="players"
+                        icon={<PermIdentity/>}
+                        label="PLAYERS"
+                    />
+                </Tabs>
+                {this.state.selectedTab === 'players' ? playerManageContainer : statusContainer}
                 <Dialog
                     className="add-to-event-dialog"
                     title="Add payment"
@@ -170,19 +189,6 @@ class Event extends React.Component {
                         options={playersToAddDataSource}
                         onChange={this.updatePlayersToAdd} />
                 </Dialog>
-
-                <BottomNavigation selectedIndex={this.state.selectedTab} style={{position: 'absolute', bottom: '0'}}>
-                    <BottomNavigationItem
-                        label="Players"
-                        icon={<PermIdentity/>}
-                        onTouchTap={() => this.setState({selectedTab: 0})}
-                    />
-                    <BottomNavigationItem
-                        label="Status"
-                        icon={<ThumbsUpDown/>}
-                        onTouchTap={() => this.setState({selectedTab: 1})}
-                    />
-                </BottomNavigation>
             </div>
         );
     }

@@ -1,10 +1,7 @@
 .event-container {
-  position: relative;
-  min-height: calc(100vh - 64px);
-
   .title {
     margin: 0;
-    padding-top: 10px;
+    padding: 10px;
     text-align: center;
   }
 
@@ -27,18 +24,21 @@
   }
 
   .button-container {
-    margin-top: 20px;
     > div {
       width: 150px;
       position: relative;
       margin: 0 auto;
+    }
+
+    &.cancel-button-container {
+      margin-top: 20px;
     }
   }
 
   .add-button {
     z-index: 99;
     position: fixed;
-    bottom: 90px;
+    bottom: 20px;
     right: calc(50% - 270px);
   }
 
