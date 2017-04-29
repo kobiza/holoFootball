@@ -27,6 +27,15 @@ function mapStateToProps(state) {
 
 const dateToString = (date) => (new Date(date)).toLocaleDateString();
 
+const getEventTitle = (eventDateTime, events) => {
+    const excitingDates = _.map(events, (event) => dateToString(event.date));
+    let newEventTitle = dateToString(eventDateTime);
+
+    const copies = _.filter(excitingDates, (eventTitle) => eventTitle === newEventTitle).length;
+
+    return !copies ? newEventTitle : newEventTitle + ' (' + copies + ')';
+};
+
 class Events extends React.Component {
 
     constructor(props) {
@@ -41,18 +50,6 @@ class Events extends React.Component {
             this.setState({newEventData: { date }});
         };
 
-        this.createEvent = () => {
-            if (_.isEmpty(this.state.newEventDate)) {
-                return;
-            }
-
-            const eventDate = new Date(this.state.newEventDate);
-            createEvent(eventDate);
-
-            this.setState({newEventDate: ''});
-
-        };
-
         this.openAddPopup = () => {
             this.setState({isAddPopupOpen: true, newEventData: {date: new Date()}});
         };
@@ -63,19 +60,25 @@ class Events extends React.Component {
 
         this.addEvent = () => {
             const eventDate = new Date(this.state.newEventData.date);
-            createEvent(eventDate);
+            const eventName = getEventTitle(eventDate.getTime(), this.props.events);
+            createEvent(eventDate, eventName);
 
             this.closeAddPopup();
         };
+
+
     }
 
     render() {
+        const notCanceledEvents = _.pickBy(this.props.events, (event) => event.status !== 'CANCELED');
 
-        const events = _.map(this.props.events, (currentEvent, eventId) => {
+        //todo - after clear data show always event.name
+        const eventsRows = _.map(notCanceledEvents, (currentEvent, eventId) => {
             return (
                 <ListItem
                     key={eventId}
-                    primaryText={dateToString(currentEvent.date)}
+                    primaryText={currentEvent.name || dateToString(currentEvent.date)}
+                    secondaryText={currentEvent.status}
                     containerElement={<Link to={"/event/" + eventId}/>}
                 />
             );
@@ -93,7 +96,7 @@ class Events extends React.Component {
             <div className="events-container">
                 <List>
                     <Subheader>Events</Subheader>
-                    {events}
+                    {eventsRows}
                 </List>
 
                 <FloatingActionButton className="add-button" onTouchTap={this.openAddPopup} >

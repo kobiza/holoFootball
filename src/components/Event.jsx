@@ -5,7 +5,7 @@ require('./Event.scss');
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import {addPlayersToEvent, removePlayerFromEvent, closeEvent} from '../utils/eventsDBUtils.js'
+import {addPlayersToEvent, removePlayerFromEvent, closeEvent, cancelEvent} from '../utils/eventsDBUtils.js'
 import Select from 'react-select';
 
 import fbConnect from '../hoc/fbConnect.jsx';
@@ -69,6 +69,12 @@ class Event extends React.Component {
             closeEvent(eventId);
         };
 
+        this.cancelEvent = () => {
+            const eventId = this.props.match.params.id;
+
+            cancelEvent(eventId);
+        };
+
         this.openAddPopup = () => {
             this.setState({isAddPopupOpen: true, playersToAdd: []});
         };
@@ -83,7 +89,7 @@ class Event extends React.Component {
 
         this.handleChange = (selectedTab) => {
             this.setState({ selectedTab });
-        }
+        };
     }
 
     render() {
@@ -91,6 +97,7 @@ class Event extends React.Component {
             return <div className="event-container"></div>
         }
 
+        const isEventOpen = this.props.editingEvent.status === 'OPEN';
         const approved = _.pick(this.props.players, this.props.editingEvent.players);
         const didNotApproved = _.omit(this.props.players, this.props.editingEvent.players);
 
@@ -130,25 +137,41 @@ class Event extends React.Component {
                     <Subheader>Guests</Subheader>
                     {guestsApprovedRows}
                 </List>
-                <FloatingActionButton mini={true} className="add-button" onTouchTap={this.openAddPopup} >
-                    <ContentAdd />
-                </FloatingActionButton>
+                {isEventOpen &&
+                    <FloatingActionButton mini={true} className="add-button" onTouchTap={this.openAddPopup} >
+                        <ContentAdd />
+                    </FloatingActionButton>
+                }
+
             </div>
         );
 
         const numberOfPlayers = _.keys(approved).length;
-        let status = 'good';
+        let numberStatus = 'good';
         if (numberOfPlayers < 10) {
-            status = 'bad';
+            numberStatus = 'bad';
         } else if (numberOfPlayers < 13) {
-            status = 'nice';
+            numberStatus = 'nice';
         }
 
         const statusContainer = (
             <div>
-                <div className={"big-number " + status}>{numberOfPlayers}</div>
-                <div className="button-container"><RaisedButton primary={true} onTouchTap={this.closeEvent} style={{display: 'block'}} label="Close event"/></div>
-                <div className="button-container cancel-button-container"><RaisedButton style={{display: 'block'}} label="Cancel event"/></div>
+                <div className={"big-number " + numberStatus}>{numberOfPlayers}</div>
+                {isEventOpen ?
+                <div>
+                    <div className="button-container">
+                        <RaisedButton label="Close event" onTouchTap={this.closeEvent} style={{display: 'block'}} primary={true}/>
+                    </div>
+                    <div className="button-container cancel-button-container">
+                        <RaisedButton label="Cancel event" onTouchTap={this.cancelEvent} style={{display: 'block'}}/>
+                    </div>
+                </div> :
+                <div>
+                    <div className="button-container">
+                        <RaisedButton label={this.props.editingEvent.status} style={{display: 'block'}} disabled={true}/>
+                    </div>
+                </div>}
+
             </div>
         );
 

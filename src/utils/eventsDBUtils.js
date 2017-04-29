@@ -17,13 +17,13 @@ const getNewTransactionID= () => {
     return 'tran-' + s4();
 };
 
-export const createEvent = (date) => {
+export const createEvent = (date, name) => {
     const eventID = getNewEventID();
     const defaults = {
         players: [],
         status: 'OPEN'
     };
-    const newEvent = _.defaults({date: date.getTime()}, defaults);
+    const newEvent = _.defaults({date: date.getTime(), name}, defaults);
 
     return DAL.setIn('/events/' + eventID, newEvent);
 };
@@ -73,7 +73,7 @@ export const closeEvent = (eventId) => {
 
 
     return DAL.read(eventPath).then((event) => {
-        if (event.status === 'CLOSED'){
+        if (event.status !== 'OPEN'){
             return Promise.resolve();
         }
 
@@ -90,6 +90,19 @@ export const closeEvent = (eventId) => {
             ...transactionsUpdates,
             ...playersUpdates
         ]);
+    });
+};
+
+export const cancelEvent = (eventId) => {
+    const eventPath = '/events/' + eventId;
+    const eventStatusPath = eventPath + '/status';
+
+    return DAL.read(eventPath).then((event) => {
+        if (event.status !== 'OPEN'){
+            return Promise.resolve();
+        }
+
+        return DAL.setIn(eventStatusPath, 'CANCELED');
     });
 };
 
