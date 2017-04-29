@@ -39,15 +39,15 @@ class App extends React.Component {
                             <div>
                                 <AppBar title="Holon football" iconClassNameRight="muidocs-icon-navigation-expand-more" iconElementLeft = {
                                     <IconMenu iconButtonElement={<IconButton><MenuIcon /></IconButton>}>
-                                        <MenuItem primaryText="Home" containerElement={<Link to="/" />}/>
+                                        {/*<MenuItem primaryText="Home" containerElement={<Link to="/" />}/>*/}
                                         <MenuItem primaryText="Players" containerElement={<Link to="/players" />}/>
-                                        <MenuItem primaryText="payments" containerElement={<Link to="/payments" />}/>
-                                        <MenuItem primaryText="events" containerElement={<Link to="/events" />}/>
+                                        <MenuItem primaryText="Payments" containerElement={<Link to="/payments" />}/>
+                                        <MenuItem primaryText="Events" containerElement={<Link to="/events" />}/>
                                     </IconMenu>}
                                 />
 
                                 <Paper zDepth={2} className="page-content-container">
-                                    <Route exact path="/" component={Home}/>
+                                    <Route exact path="/" component={Events}/>
                                     <Route path="/players" component={Players}/>
                                     <Route path="/payments" component={Payments}/>
                                     <Route path="/events" component={Events}/>
