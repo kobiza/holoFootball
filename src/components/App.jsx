@@ -13,6 +13,7 @@ import Players from './Players.jsx';
 import Payments from './Payments.jsx';
 import Events from './Events.jsx';
 import Event from './Event.jsx';
+import Player from './Player.jsx';
 import Home from './Home.jsx';
 
 import AppBar from 'material-ui/AppBar';
@@ -52,6 +53,7 @@ class App extends React.Component {
                                     <Route path="/payments" component={Payments}/>
                                     <Route path="/events" component={Events}/>
                                     <Route path="/event/:id" component={Event}/>
+                                    <Route path="/player/:id" component={Player}/>
                                 </Paper>
                             </div>
                         </Router>

@@ -25,11 +25,21 @@ function mapStateToProps(state) {
     };
 }
 
-const dateToString = (date) => (new Date(date)).toLocaleDateString();
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear().toString().substr(-2);
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('/');
+};
 
 const getEventTitle = (eventDateTime, events) => {
-    const excitingDates = _.map(events, (event) => dateToString(event.date));
-    let newEventTitle = dateToString(eventDateTime);
+    const excitingDates = _.map(events, (event) => formatDate(event.date));
+    let newEventTitle = formatDate(eventDateTime);
 
     const copies = _.filter(excitingDates, (eventTitle) => eventTitle === newEventTitle).length;
 
@@ -77,7 +87,7 @@ class Events extends React.Component {
             return (
                 <ListItem
                     key={eventId}
-                    primaryText={currentEvent.name || dateToString(currentEvent.date)}
+                    primaryText={currentEvent.name || formatDate(currentEvent.date)}
                     secondaryText={currentEvent.status}
                     containerElement={<Link to={"/event/" + eventId}/>}
                 />

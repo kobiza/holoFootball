@@ -6,6 +6,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import {updatePlayer, addPlayer} from '../utils/playersDBUtils.js'
+import {Link} from 'react-router-dom';
 
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
@@ -110,13 +111,14 @@ class Players extends React.Component {
             return (
                 <IconMenu iconButtonElement={iconButtonElement}>
                     <MenuItem onTouchTap={() => this.togglePermanent(playerData, playerId)}>{togglePermanentButtonText}</MenuItem>
+                    <MenuItem containerElement={<Link to={"/player/" + playerId}/>}>Activities</MenuItem>
                 </IconMenu>
             );
         };
 
         const permanentPlayersComps = _.map(permanentPlayers, (currentPlayer, playerId) => {
             return (
-                <ListItem primaryText={currentPlayer.name}
+                <ListItem primaryText={currentPlayer.name} secondaryText={'credit: ' + currentPlayer.creditPoints}
                           rightIconButton={gerRightIconMenu(currentPlayer, playerId)}
                           key={'p-player-' + playerId}/>
             );
@@ -124,7 +126,7 @@ class Players extends React.Component {
 
         const guestsComps = _.map(guests, (currentPlayer, playerId) => {
             return (
-                <ListItem primaryText={currentPlayer.name}
+                <ListItem primaryText={currentPlayer.name} secondaryText={'credit: ' + currentPlayer.creditPoints}
                           rightIconButton={gerRightIconMenu(currentPlayer, playerId)}
                           key={'g-player-' + playerId}/>
             );

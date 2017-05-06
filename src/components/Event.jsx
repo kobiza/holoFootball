@@ -31,8 +31,17 @@ const mapStateToProps = (state) => {
     };
 };
 
-const dateToString = (date) => (new Date(date)).toLocaleDateString();
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear().toString().substr(-2);
 
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('/');
+};
 
 class Event extends React.Component {
 
@@ -177,7 +186,7 @@ class Event extends React.Component {
 
         return (
             <div className="event-container">
-                <h2 className="title">{dateToString(this.props.editingEvent.date)}</h2>
+                <h2 className="title">{formatDate(this.props.editingEvent.date)}</h2>
 
                 <Tabs
                     value={this.state.selectedTab}

@@ -12,6 +12,15 @@ import {List, ListItem} from 'material-ui/List';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 import Select from 'react-select';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+} from 'material-ui/Table';
+
 
 // import AttachMoney from 'material-ui/svg-icons/editor/attach-money';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -30,6 +39,18 @@ function mapStateToProps(state) {
         payments: state.fb.payments
     };
 }
+
+const formatDate = (date) => {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear().toString().substr(-2);
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('/');
+};
 
 const isInvalidPaymentData = (paymentData) => {
     if (_.isEmpty(paymentData.players)){
@@ -89,16 +110,25 @@ class Payments extends React.Component {
     }
 
     render() {
+        if (!this.props.players || !this.props.payments) {
+            return (
+                <div className="payments-container"></div>
+            );
+        }
+
+        const showCheckboxes = false;
         const sortedPayments = _.sortBy(this.props.payments, (payment) => payment.date).reverse();
-        const paymentsComps = _.map(sortedPayments, (payment, payId) => {
-            const date = new  Date(payment.date).toDateString();
+        const paymentsRows = _.map(sortedPayments, (payment, payId) => {
             const playerName = this.props.players[payment.playerId] && this.props.players[payment.playerId].name;
             return (
-                <ListItem key={'payment-' + payId}
-                    primaryText={playerName + ': ' + payment.amount}
-                    secondaryText={date} />
+                <TableRow key={payId}>
+                    <TableRowColumn width={55}>{formatDate(payment.date)}</TableRowColumn>
+                    <TableRowColumn>{playerName}</TableRowColumn>
+                    <TableRowColumn>{payment.amount}</TableRowColumn>
+                </TableRow>
             );
         });
+
         const actions = [
             <FlatButton
                 label="Add"
@@ -110,9 +140,20 @@ class Payments extends React.Component {
 
         return (
             <div className="payments-container">
-                <List>
-                    {paymentsComps}
-                </List>
+                <Table>
+                    <TableHeader displaySelectAll={showCheckboxes}
+                                 adjustForCheckbox={showCheckboxes}>
+                        <TableRow>
+                            <TableHeaderColumn width={55}>Date</TableHeaderColumn>
+                            <TableHeaderColumn>Name</TableHeaderColumn>
+                            <TableHeaderColumn>Amount</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={showCheckboxes}>
+                        {paymentsRows}
+                    </TableBody>
+                </Table>
+
                 <FloatingActionButton className="add-button" onTouchTap={this.openAddPopup} >
                     <ContentAdd />
                 </FloatingActionButton>
