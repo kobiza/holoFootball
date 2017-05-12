@@ -17,17 +17,8 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 
-import Subheader from 'material-ui/Subheader';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import Divider from 'material-ui/Divider';
-import RaisedButton from 'material-ui/RaisedButton';
-
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
-import PermIdentity from 'material-ui/svg-icons/action/perm-identity';
-import ThumbsUpDown from 'material-ui/svg-icons/action/thumbs-up-down';
 
 const mapStateToFirebase = (props) => {
     const playerId = props.match.params.id;

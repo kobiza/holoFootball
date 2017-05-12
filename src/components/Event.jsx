@@ -5,7 +5,7 @@ require('./Event.scss');
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import {addPlayersToEvent, removePlayerFromEvent, closeEvent, cancelEvent} from '../utils/eventsDBUtils.js'
+import {addPlayersToEvent, closeEvent, cancelEvent} from '../utils/eventsDBUtils.js'
 import Select from 'react-select';
 
 import fbConnect from '../hoc/fbConnect.jsx';

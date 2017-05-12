@@ -1,14 +1,12 @@
 'use strict';
 
 require('./Payments.scss');
-// import 'react-select/dist/react-select.css';
 
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import {createPaymentTransaction} from '../utils/playersDBUtils.js'
 
-import {List, ListItem} from 'material-ui/List';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 import Select from 'react-select';

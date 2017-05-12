@@ -14,7 +14,6 @@ import Payments from './Payments.jsx';
 import Events from './Events.jsx';
 import Event from './Event.jsx';
 import Player from './Player.jsx';
-import Home from './Home.jsx';
 
 import AppBar from 'material-ui/AppBar';
 import Paper from 'material-ui/Paper';
